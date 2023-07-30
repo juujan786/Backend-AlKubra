@@ -6,11 +6,11 @@ const sendEmail = async (options) => {
     port: "465",
     service: "gmail",
     auth: {
-      user: "jhsurmovi@gmail.com",
-      pass: "03555148486",
+      user: "jhsurmovi123@gmail.com",
+      pass: "anhllssfkjrmhnxe",
     },
   });
- 
+
   const mailOptions = {
     from: "jhsurmovi@gmail.com",
     to: options.email,
