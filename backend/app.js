@@ -8,27 +8,28 @@ app.use(express.json());
 app.use(cookieParser());
 
 //set up cors
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Replace with your frontend URL
-    credentials: true, // Allow cookies to be sent with requests
-  })
-);
+
+app.use(cors(corsOptions));
 
 // Route Imports
 const product = require("./routes/productRoutes");
 const user = require("./routes/userRoute");
 const order = require("./routes/orderRoute");
 const payment = require("./routes/paymentRoutes");
+
 const productionCenter = require("./routes/centerRoutes");
 const form = require("./routes/formRoutes");
+
+
 
 app.use("/api/v1", product);
 app.use("/api/v1", user);
 app.use("/api/v1", order);
 app.use("/api/v1", payment);
+
 app.use("/api/v1", productionCenter);
 app.use("/api/v1", form);
+
 
 // Middleware for Errors
 app.use(errorMiddleware);
