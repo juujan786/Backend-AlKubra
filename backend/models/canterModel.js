@@ -19,18 +19,36 @@ const centerSchema = mongoose.Schema({
     type: Number,
     required: [true, "Please Enter Number of Workers at the Production center"],
   },
-  images: [
-    {
-      public_id: {
-        type: String,
-        required: true,
-      },
-      url: {
-        type: String,
-        required: true,
-      },
+  profileImage: {
+    public_id: {
+      type: String,
+      required: true,
     },
-  ],
+    url: {
+      type: String,
+      required: true,
+    },
+  },
+  cardImage: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
+  displayImage: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
