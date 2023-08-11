@@ -6,6 +6,7 @@ const User = require("../models/userModel");
 
 // Login Auth, to access any resource first user have to login
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
+  console.log("hello");
     const { token } = req.cookies;
   
     if (!token) {
