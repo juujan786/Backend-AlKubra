@@ -53,6 +53,14 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next)=>{
   .search().filter();
 
  
+  const products = await apiFeature.query;
+
+  res.status(201).json({
+    success: true,
+    products,
+    productsCount
+  })
+})
 
 // Get All Product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {

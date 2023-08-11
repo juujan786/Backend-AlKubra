@@ -9,7 +9,7 @@ app.use(cookieParser());
 
 //set up cors
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // Route Imports
 const product = require("./routes/productRoutes");
