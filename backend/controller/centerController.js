@@ -12,15 +12,15 @@ exports.createProductionCenter = catchAsyncErrors(async (req, res, next) => {
     location,
     description,
     numberOfWorkers,
-    profileImages: {
+    profileImage: {
       public_id: "sample id",
       url: "sample url",
     },
-    cardImages: {
+    cardImage: {
       public_id: "sample id",
       url: "sample url",
     },
-    displayImages: {
+    displayImage: {
       public_id: "sample id",
       url: "sample url",
     },

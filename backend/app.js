@@ -2,14 +2,18 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const errorMiddleware = require("./middleware/error");
-const cors = require("cors");
 
 app.use(express.json());
 app.use(cookieParser());
 
 //set up cors
-
-app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 // Route Imports
 const product = require("./routes/productRoutes");
@@ -20,8 +24,6 @@ const payment = require("./routes/paymentRoutes");
 const productionCenter = require("./routes/centerRoutes");
 const form = require("./routes/formRoutes");
 
-
-
 app.use("/api/v1", product);
 app.use("/api/v1", user);
 app.use("/api/v1", order);
@@ -29,7 +31,6 @@ app.use("/api/v1", payment);
 
 app.use("/api/v1", productionCenter);
 app.use("/api/v1", form);
-
 
 // Middleware for Errors
 app.use(errorMiddleware);

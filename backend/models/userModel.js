@@ -46,7 +46,6 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpire: Date,
 });
 
-
 // This code adds a pre-save hook to the user schema. It automatically hashes the user's password before saving it to the database, but only if the password has been modified or is new. It uses bcrypt to securely hash the password.
 // do this before saving user schema
 userSchema.pre("save", async function (next) {
@@ -59,13 +58,12 @@ userSchema.pre("save", async function (next) {
 
 // JWT TOKEN
 userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id: this._id }, "AKLJHDFKJHAKDJHFKSDHKLAHAJHJGFH", {
     expiresIn: "5d",
   });
 };
 
 // Compare Password
-
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };

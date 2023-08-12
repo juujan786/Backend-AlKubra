@@ -44,6 +44,8 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHander("Invalid email or password", 401));
   }
 
+  req.user = user;
+
   sendToken(user, 200, res);
 });
 
@@ -62,6 +64,7 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
 
 // Forgot Password
 exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
+  console.log(req.body);
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
