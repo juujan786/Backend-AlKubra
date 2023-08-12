@@ -23,8 +23,7 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     shippingPrice,
     totalPrice,
     paidAt: Date.now(),
-    // user: req.user._id,
-    user: "64d141e73ab7ea19f88c34b3",
+    user: req.user._id,
   });
 
   orderItems.map(async (item) => {
@@ -58,8 +57,7 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 // get logged in user  Orders
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find({
-    // user: req.user._id
-    user: "64d141e73ab7ea19f88c34b3",
+    user: req.user._id,
   });
 
   res.status(200).json({

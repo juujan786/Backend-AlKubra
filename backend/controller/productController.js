@@ -44,27 +44,26 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 
-  // Get All Product
-exports.getAllProducts = catchAsyncErrors(async (req, res, next)=>{
+//   // Get All Product
+// exports.getAllProducts = catchAsyncErrors(async (req, res, next)=>{
 
-  const productsCount = await Product.countDocuments();
+//   const productsCount = await Product.countDocuments();
 
-  const apiFeature = new ApiFeatures(Product.find(), req.query)
-  .search().filter();
+//   const apiFeature = new ApiFeatures(Product.find(), req.query)
+//   .search().filter();
 
  
-  const products = await apiFeature.query;
+//   const products = await apiFeature.query;
 
-  res.status(201).json({
-    success: true,
-    products,
-    productsCount
-  })
-})
+//   res.status(201).json({
+//     success: true,
+//     products,
+//     productsCount
+//   })
+// })
 
 // Get All Product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
-  const resultPerPage = 5;
   const productsCount = await Product.countDocuments();
 
   const apiFeature = new ApiFeatures(Product.find(), req.query)
@@ -144,12 +143,13 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(productId);
 
   const isReviewed = product.reviews.find(
-    (rev) => rev.user.toString() === req.user._id.toString()
+    // (rev) => rev.user.toString() === req.user._id.toString()
+    (rev) => rev.user.toString() === "64d3720104dc1518f8003451"
   );
 
   if (isReviewed) {
     product.reviews.forEach((rev) => {
-      if (rev.user.toString() === req.user._id.toString())
+      if (rev.user.toString() === "64d3720104dc1518f8003451")
         (rev.rating = rating), (rev.comment = comment);
     });
   } else {

@@ -55,4 +55,4 @@ const centerSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("center", centerSchema);
+module.exports = mongoose.model("Center", centerSchema);

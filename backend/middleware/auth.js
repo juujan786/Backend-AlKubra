@@ -5,16 +5,23 @@ const User = require("../models/userModel");
 
 // Login Auth, to access any resource first user have to login
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
-    const { token } = req.cookies;
-  
-    if (!token) {
-      return next(new ErrorHander("Please Login to access this resource", 401));
-    }
-  
-    const decodedData = jwt.verify(token, "AKLJHDFKJHAKDJHFKSDHKLAHAJHJGFH");
-  
-    req.user = await User.findById(decodedData.id);
-  
+
+  const { token } = req.cookies;
+
+  const authorizationHeader = req.headers.authorization;
+
+  if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
+    // Extract the token after 'Bearer '
+    req.token = authorizationHeader.split(" ")[1];
+  }
+
+  if (!token) {
+    return next(new ErrorHander("Please Login to access this resource", 401));
+  }
+
+  const decodedData = jwt.verify(req.token, "AKLJHDFKJHAKDJHFKSDHKLAHAJHJGFH");
+
+  req.user = await User.findById(decodedData.id);
     next();
   });
 

@@ -23,11 +23,8 @@ router.route("/password/forgot").post(forgotPassword);
 router.route("/password/reset/:token").put(resetPassword);
 router.route("/logout").get(logout);
 router.route("/me").get(isAuthenticatedUser, getUserDetails);
-
 router.route("/me/update").put(isAuthenticatedUser, updateProfile);
-
 router.route("/password/update").put(isAuthenticatedUser, updatePassword);
-
 router
   .route("/admin/users")
   .get(getAllUser);
