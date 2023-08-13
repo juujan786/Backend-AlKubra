@@ -10,19 +10,19 @@ class ApiFeatures {
           $or: [
             {
               name: {
-                $regex: JSON.parse(this.queryStr.keyword),
+                $regex: this.queryStr.keyword,
                 $options: "i",
               },
             },
             {
               category: {
-                $regex: JSON.parse(this.queryStr.keyword),
+                $regex: this.queryStr.keyword,
                 $options: "i",
               },
             },
             {
               description: {
-                $regex: JSON.parse(this.queryStr.keyword),
+                $regex: this.queryStr.keyword,
                 $options: "i",
               },
             },
