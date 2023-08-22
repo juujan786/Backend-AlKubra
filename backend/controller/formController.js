@@ -5,13 +5,13 @@ const Form = require("../models/formModel");
 
 //Submit Form
 exports.submitForm = catchAsyncErrors(async (req, res, next) => {
-  const { name, email, phone, destrict, productionCenter } = req.body;
+  const { name, email, phone, district, productionCenter } = req.body;
 
   const form = await Form.create({
     name,
     email,
     phone,
-    destrict,
+    district,
     productionCenter,
     image: {
       public_id: "sample id",

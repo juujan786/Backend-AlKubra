@@ -24,7 +24,7 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     totalPrice,
     paidAt: Date.now(),
     // user: req.user._id,
-    user: "64d141e73ab7ea19f88c34b3",
+    // user: "64d141e73ab7ea19f88c34b3",
   });
 
   orderItems.map(async (item) => {
@@ -59,7 +59,7 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find({
     // user: req.user._id
-    user: "64d141e73ab7ea19f88c34b3",
+    // user: "64d141e73ab7ea19f88c34b3",
   });
 
   res.status(200).json({
@@ -88,8 +88,6 @@ exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
 
 // update Order Status -- Admin
 exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
-   
-
   const order = await Order.findById(req.params.id);
 
   if (!order) {

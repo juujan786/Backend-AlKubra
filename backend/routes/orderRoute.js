@@ -31,16 +31,12 @@ router.route("/orders/me").get(
 
 router
   .route("/admin/orders")
-  .get(getAllOrders);
+  .get(isAuthenticatedUser,authorizeRoles("admin"),getAllOrders);
 
 router
   .route("/admin/order/:id")
-  .put(
-    // isAuthenticatedUser, authorizeRoles("admin"), 
-    updateOrder)
-  .delete(
-    // isAuthenticatedUser, authorizeRoles("admin"), 
-    deleteOrder);
+  .put(isAuthenticatedUser, authorizeRoles("admin"), updateOrder)
+  .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteOrder);
 
 
 module.exports = router;

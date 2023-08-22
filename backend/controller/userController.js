@@ -177,6 +177,7 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
+
   res.status(200).json({
     success: true,
     user,
@@ -184,14 +185,22 @@ exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Get all users(admin)
-exports.getAllUser = catchAsyncErrors(async (req, res, next) => {
-  const users = await User.find();
+// exports.getAllUser = catchAsyncErrors(async (req, res, next) => {
+//   const users = await User.find();
 
-  res.status(200).json({
-    success: true,
-    users,
-  });
-});
+//   const { q } = req.query;
+
+//   const keys = ["first_name", "last_name", "email"];
+
+//   const search = (data) => {
+//     return data.filter((item) =>
+//       keys.some((key) => item[key].toLowerCase().includes(q))
+//     );
+//   };
+
+//   q ? res.status(200).json(search(users)) : res.status(200).json({ success: true, users,});
+
+// });
 
 // Get all users(admin)
 exports.getAllUser = catchAsyncErrors(async (req, res, next) => {

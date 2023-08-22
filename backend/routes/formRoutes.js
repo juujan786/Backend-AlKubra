@@ -13,10 +13,10 @@ router.route("/submit-form").post(
 
 router
   .route("/admin/forms")
-  .get(isAuthenticatedUser, authorizeRoles("admin"), getAllForms);
+  .get(isAuthenticatedUser,authorizeRoles("admin"), getAllForms);
 
 router
   .route("/admin/forms/:id")
-  .get(isAuthenticatedUser, authorizeRoles("admin"), getOneFrom);
+  .get(isAuthenticatedUser,authorizeRoles("admin"),getOneFrom);
 
 module.exports = router;

@@ -7,12 +7,19 @@ const User = require("../models/userModel");
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
     const { token } = req.cookies;
   
-    if (!token) {
+    const authorizationHeader = req.headers.authorization;
+
+    if(authorizationHeader && authorizationHeader.startsWith("Bearer ")){
+      req.token = authorizationHeader.split(" ")[1];
+    }
+
+    if (!req.token) {
       return next(new ErrorHander("Please Login to access this resource", 401));
     }
   
-    const decodedData = jwt.verify(token, "AKLJHDFKJHAKDJHFKSDHKLAHAJHJGFH");
-  
+    const decodedData = jwt.verify(req.token, "AKLJHDFKJHAKDJHFKSDHKLAHAJHJGFH");
+    
+    
     req.user = await User.findById(decodedData.id);
   
     next();

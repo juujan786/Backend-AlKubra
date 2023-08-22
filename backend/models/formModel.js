@@ -16,7 +16,7 @@ const formSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
-  destrict: {
+  district: {
     type: String,
     required: true,
     trim: true,
