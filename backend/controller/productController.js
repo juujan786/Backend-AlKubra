@@ -2,6 +2,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHander = require("../utils/errorhander");
 const ApiFeatures = require("../utils/apifeatures");
 const Product = require("../models/productModel");
+const UserInteraction = require("../models/userInteractionModel");
 const cloudinary = require("cloudinary");
 
 // Create Product -- Admin
@@ -29,20 +30,16 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 
   req.body.images = imagesLinks;
 
+  // during login we stored id in req.user
 
-  // during login we stored id in req.user 
+  req.body.user = req.user;
+  const product = await Product.create(req.body);
 
-
-    req.body.user = req.user;
-    const product = await Product.create(req.body);
-  
   res.status(201).json({
     success: true,
     product,
-
   });
 });
-
 
 //   // Get All Product
 // exports.getAllProducts = catchAsyncErrors(async (req, res, next)=>{
@@ -52,7 +49,6 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 //   const apiFeature = new ApiFeatures(Product.find(), req.query)
 //   .search().filter();
 
- 
 //   const products = await apiFeature.query;
 
 //   res.status(201).json({
@@ -91,6 +87,31 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     success: true,
     product,
   });
+});
+
+//Recommend Products
+exports.recommendProducts = catchAsyncErrors(async (req, res, next) => {
+  try {
+    let recommendedProducts = "";
+    const products = req.body.products;
+    if (products.length === 0) {
+      recommendedProducts = await Product.find();
+    } else {
+      const productIds = products.map((product) => product.productId);
+      const categories = products.map((product) => product.category);
+
+      // Fetch products from the same category as the user's interactions
+      recommendedProducts = await Product.find({
+        category: { $in: categories },
+        _id: { $nin: productIds }, // Exclude products already interacted with
+      }); // Limit to 5 recommendations
+    }
+
+    res.json(recommendedProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
 });
 
 // Update Product -- Admin

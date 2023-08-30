@@ -5,8 +5,9 @@ const stripe = require("stripe")(
 );
 
 exports.processPayment = catchAssyncErrors(async (req, res, next) => {
+  const amount = req.body.amount;
   const myPayment = await stripe.paymentIntents.create({
-    amount: req.body.amount,
+    amount: amount,
     currency: "usd",
     metadata: {
       company: "Al-Kubra",

@@ -3,7 +3,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const errorMiddleware = require("./middleware/error");
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
 //set up cors
