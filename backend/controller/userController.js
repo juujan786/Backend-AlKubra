@@ -4,6 +4,8 @@ const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const cloudinary = require("cloudinary");
+ 
 
 // Register a User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -251,9 +253,30 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
 
 // update User Profile
 exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
+ 
+
+    const { secure_url, public_id } = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "user",
+      // width: 150,
+      // crop: "scale",
+    });
+    
+    
+    // Find the current user
+    const currentUser = await User.findById(req.user.id);
+    
+    // Check if the user has a previous avatar
+    if (currentUser.avatar && currentUser.avatar.public_id) {
+      // Delete the old avatar image from Cloudinary
+      await cloudinary.uploader.destroy(currentUser.avatar.public_id);
+    }
+ 
+ 
+ 
   const newUserData = {
     name: req.body.name,
     email: req.body.email,
+    avatar: {public_id, url: secure_url}
   };
 
   const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
