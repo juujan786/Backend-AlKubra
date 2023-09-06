@@ -8,10 +8,9 @@ const {
   updateProductuctionCenter,
 } = require("../controller/centerController");
 
-router.route("/admin/production-centers/new").post(
-  // isAuthenticatedUser, authorizeRoles("admin"),
-  createProductionCenter
-);
+router
+  .route("/admin/production-centers/new")
+  .post(isAuthenticatedUser, authorizeRoles("admin"), createProductionCenter);
 
 router.route("/production-centers").get(getAllProductionCenters);
 

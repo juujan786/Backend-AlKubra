@@ -12,9 +12,13 @@ const formSchema = mongoose.Schema({
     trim: true,
   },
   phone: {
-    type: Number,
+    type: String,
     required: true,
     trim: true,
+  },
+  cnic: {
+    type: String,
+    required: true,
   },
   district: {
     type: String,
@@ -36,6 +40,11 @@ const formSchema = mongoose.Schema({
       required: true,
     },
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
-module.exports = mongoose.model("form", formSchema);
+module.exports = mongoose.model("Form", formSchema);

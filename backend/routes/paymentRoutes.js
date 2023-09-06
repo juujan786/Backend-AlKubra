@@ -6,7 +6,7 @@ const {
   sendStripeApiKey,
 } = require("../controller/paymentController");
 
-router.route("/process/payment").post(processPayment);
+router.route("/process/payment").post(isAuthenticatedUser, processPayment);
 router.route("/stripeapikey").get(sendStripeApiKey);
 
 module.exports = router;

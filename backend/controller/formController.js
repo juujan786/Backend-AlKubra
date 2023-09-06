@@ -1,22 +1,25 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHander = require("../utils/errorhander");
-const ApiFeatures = require("../utils/apifeatures");
 const Form = require("../models/formModel");
 
 //Submit Form
 exports.submitForm = catchAsyncErrors(async (req, res, next) => {
-  const { name, email, phone, district, productionCenter } = req.body;
+
+  const { name, email, phone, cnic, district, productionCenter } = req.body;
+
 
   const form = await Form.create({
     name,
     email,
     phone,
+    cnic,
     district,
     productionCenter,
     image: {
       public_id: "sample id",
       url: "sample url",
     },
+    user: req.user._id,
   });
 
   res.status(201).json({

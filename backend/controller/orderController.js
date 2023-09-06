@@ -2,6 +2,7 @@ const Order = require("../models/orderModel");
 const Product = require("../models/productModel");
 const ErrorHander = require("../utils/errorhander");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const sendEmail = require("../utils/sendEmail");
 
 // Create new Order
 exports.newOrder = catchAsyncErrors(async (req, res, next) => {
@@ -13,6 +14,7 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     taxPrice,
     shippingPrice,
     totalPrice,
+    noOfItems,
   } = req.body;
   const order = await Order.create({
     shippingInfo,
@@ -23,13 +25,20 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     shippingPrice,
     totalPrice,
     paidAt: Date.now(),
-    // user: req.user._id,
-    // user: "64d141e73ab7ea19f88c34b3",
+    user: req.user._id,
   });
 
   orderItems.map(async (item) => {
     await updateStock(item.product, item.quantity);
   });
+  const options = {
+    email: req.user.email,
+    subject: "Al-Kubra || Order Successfully placed",
+    message: `Congratulations ${req.user.name}, \n\nYou've successfully placed an order.\n\n Order Details:-\n\n
+    Total Items: ${noOfItems}\n\nTotal Price: ${totalPrice}\n\nYour order will be delivered to you very soon.\n\nThank You!`,
+  };
+
+    sendEmail(options);
 
   res.status(201).json({
     success: true,
@@ -58,8 +67,8 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 // get logged in user  Orders
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find({
-    // user: req.user._id
-    // user: "64d141e73ab7ea19f88c34b3",
+    user: req.user._id,
+
   });
 
   res.status(200).json({

@@ -2,6 +2,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHander = require("../utils/errorhander");
 const ApiFeatures = require("../utils/apifeatures");
 const Product = require("../models/productModel");
+const UserInteraction = require("../models/userInteractionModel");
 const cloudinary = require("cloudinary");
 
 // Create Product -- Admin
@@ -29,42 +30,36 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 
   req.body.images = imagesLinks;
 
+  // during login we stored id in req.user
 
-  // during login we stored id in req.user 
+  req.body.user = req.user;
+  const product = await Product.create(req.body);
 
-
-    req.body.user = req.user;
-    const product = await Product.create(req.body);
-  
   res.status(201).json({
     success: true,
     product,
-
   });
 });
 
+//   // Get All Product
+// exports.getAllProducts = catchAsyncErrors(async (req, res, next)=>{
 
-  // Get All Product
-exports.getAllProducts = catchAsyncErrors(async (req, res, next)=>{
+//   const productsCount = await Product.countDocuments();
 
-  const productsCount = await Product.countDocuments();
+//   const apiFeature = new ApiFeatures(Product.find(), req.query)
+//   .search().filter();
 
-  const apiFeature = new ApiFeatures(Product.find(), req.query)
-  .search().filter();
+//   const products = await apiFeature.query;
 
- 
-  const products = await apiFeature.query;
-
-  res.status(201).json({
-    success: true,
-    products,
-    productsCount
-  })
-})
+//   res.status(201).json({
+//     success: true,
+//     products,
+//     productsCount
+//   })
+// })
 
 // Get All Product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
-  const resultPerPage = 5;
   const productsCount = await Product.countDocuments();
 
   const apiFeature = new ApiFeatures(Product.find(), req.query)
@@ -92,6 +87,35 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     success: true,
     product,
   });
+});
+
+//Recommend Products
+exports.recommendProducts = catchAsyncErrors(async (req, res, next) => {
+  try {
+    let recommendedProducts = "";
+    console.log("products: ", req.body.products);
+    const products = req.body.products;
+    if (products.length === 0) {
+      recommendedProducts = await Product.find();
+    } else {
+      const productIds = products.map((product) => product.productId);
+      const categories = products.map((product) => product.category);
+
+      if (productIds && categories) {
+        // Fetch products from the same category as the user's interactions
+        recommendedProducts = await Product.find({
+          category: { $in: categories },
+          _id: { $nin: productIds }, // Exclude products already interacted with
+        }); // Limit to 5 recommendations
+      } else {
+        recommendedProducts = await Product.find();
+      }
+    }
+    res.json(recommendedProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
 });
 
 // Update Product -- Admin
