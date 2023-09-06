@@ -43,8 +43,7 @@ exports.getAllProductionCenters = catchAsyncErrors(async (req, res, next) => {
 });
 
 //Get Center details
-exports.getProductionCenterDetails = catchAsyncErrors(
-  async (req, res, next) => {
+exports.getProductionCenterDetails = catchAsyncErrors( async (req, res, next) => {
     const center = await Center.findById(req.params.id);
 
     if (!center) {
