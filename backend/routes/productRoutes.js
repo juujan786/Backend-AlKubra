@@ -34,6 +34,6 @@ router
   .get(getProductReviews)
   .delete(isAuthenticatedUser, deleteReview);
 
-router.route("/recommend/:userId").post(isAuthenticatedUser, recommendProducts);
+router.route("/recommend").post(recommendProducts);
 
 module.exports = router;

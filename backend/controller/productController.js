@@ -93,6 +93,7 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 exports.recommendProducts = catchAsyncErrors(async (req, res, next) => {
   try {
     let recommendedProducts = "";
+    console.log("products: ", req.body.products);
     const products = req.body.products;
     if (products.length === 0) {
       recommendedProducts = await Product.find();
@@ -100,13 +101,16 @@ exports.recommendProducts = catchAsyncErrors(async (req, res, next) => {
       const productIds = products.map((product) => product.productId);
       const categories = products.map((product) => product.category);
 
-      // Fetch products from the same category as the user's interactions
-      recommendedProducts = await Product.find({
-        category: { $in: categories },
-        _id: { $nin: productIds }, // Exclude products already interacted with
-      }); // Limit to 5 recommendations
+      if (productIds && categories) {
+        // Fetch products from the same category as the user's interactions
+        recommendedProducts = await Product.find({
+          category: { $in: categories },
+          _id: { $nin: productIds }, // Exclude products already interacted with
+        }); // Limit to 5 recommendations
+      } else {
+        recommendedProducts = await Product.find();
+      }
     }
-
     res.json(recommendedProducts);
   } catch (error) {
     console.error(error);
