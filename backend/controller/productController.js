@@ -93,10 +93,13 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 exports.recommendProducts = catchAsyncErrors(async (req, res, next) => {
   try {
     let recommendedProducts = "";
-    console.log("products: ", req.body.products);
+    const ratings = [4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5];
+    // console.log("products: ", req.body.products);
     const products = req.body.products;
     if (products.length === 0) {
-      recommendedProducts = await Product.find();
+      recommendedProducts = await Product.find({
+        ratings: { $in: ratings },
+      });
     } else {
       const productIds = products.map((product) => product.productId);
       const categories = products.map((product) => product.category);
