@@ -14,6 +14,7 @@ const { authorizeRoles, isAuthenticatedUser } = require("../middleware/auth");
 
 const router = express.Router();
 
+
 router
   .route("/admin/products/new")
   .post(isAuthenticatedUser, authorizeRoles("admin"), createProduct);

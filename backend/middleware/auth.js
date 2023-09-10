@@ -5,6 +5,7 @@ const User = require("../models/userModel");
 
 // Login Auth, to access any resource first user have to login
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
+
   const { token } = req.cookies;
 
   const authorizationHeader = req.headers.authorization;
@@ -21,6 +22,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   const decodedData = jwt.verify(req.token, "AKLJHDFKJHAKDJHFKSDHKLAHAJHJGFH");
 
   req.user = await User.findById(decodedData.id);
+
     next();
   });
 
