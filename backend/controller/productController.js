@@ -41,50 +41,36 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//   // Get All Product
-// exports.getAllProducts = catchAsyncErrors(async (req, res, next)=>{
-
-//   const productsCount = await Product.countDocuments();
-
-//   const apiFeature = new ApiFeatures(Product.find(), req.query)
-//   .search().filter();
-
-//   const products = await apiFeature.query;
-
-//   res.status(201).json({
-//     success: true,
-//     products,
-//     productsCount
-//   })
-// })
+// Shuffle products
+const shuffleArray = (array) => {
+  // Fisher-Yates shuffle algorithm
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
 
 // Get All Product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
-  
-  // console.log(`Pass`)
-  // console.log(`./Payment-Checkout.test.js (6.165s)`)
-  // console.log(`Payment-Checkout process`)
-  // console.log(`\u2713 can load Payment-Checkout site (167ms)`)
-  // console.log(`\u2713 can click Pay link (29ms)`)
-  // // console.log(`\u2713 can sign-in with a email address (3733ms)`)
-  // // console.log(`\u2713 can sign-in with a password (1733ms)`)
-  // console.log(`\u2713 can fetch confirmation code (9968ms)`)
-  // console.log(`\u2713 pass (968ms)`)
-  // // console.log(`\u2717 Pass (890ms)`)
-  // console.log(`\u2713 shows Successfully Message (6948ms)`)
-   
+
+  // console.log("Hello: ", req.query.keyword, req.query.category);
+  const page = parseInt(req.query.page) || 1;
+
+  const pageSize = 48;
+
+  const skip = (page - 1) * pageSize;
+
+
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
-    .filter();
+    .filter()
+    .pagination({ skip, pageSize });
 
-  const products = await apiFeature.query;
+  const products = await shuffleArray(await apiFeature.query);
 
-  res.status(201).json({
-    success: true,
-    products,
-    productsCount,
-  });
+  res.status(201).json({ productsCount, products, page });
 });
 
 // Get Product Details
@@ -94,6 +80,7 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
   if (!product) {
     return next(new ErrorHander("Product not found", 404));
   }
+  // console.log(product);
 
   res.status(200).json({
     success: true,
@@ -106,7 +93,6 @@ exports.recommendProducts = catchAsyncErrors(async (req, res, next) => {
   try {
     let recommendedProducts = "";
     const ratings = [4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5];
-    // console.log("products: ", req.body.products);
     const products = req.body.products;
     if (products.length === 0) {
       recommendedProducts = await Product.find({
@@ -120,17 +106,27 @@ exports.recommendProducts = catchAsyncErrors(async (req, res, next) => {
         // Fetch products from the same category as the user's interactions
         recommendedProducts = await Product.find({
           category: { $in: categories },
-          _id: { $nin: productIds }, // Exclude products already interacted with
+          // _id: { $nin: productIds }, // Exclude products already interacted with
         }); // Limit to 5 recommendations
       } else {
         recommendedProducts = await Product.find();
       }
     }
-    res.json(recommendedProducts);
+    const recommended = await shuffleArray(recommendedProducts);
+    res.json(recommended);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });
   }
+});
+
+// new arrivals
+exports.getNewArrivals = catchAsyncErrors(async (req, res, next) => {
+  const products = await Product.find().limit(20);
+
+  // const products = await shuffleArray(await apiFeature.query);
+
+  res.status(201).json({ success: true, products });
 });
 
 // Update Product -- Admin
@@ -173,8 +169,17 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   const { rating, comment, productId } = req.body;
 
+  const user = req.user._id;
+
+  if (!user) {
+    res.status(404).json({
+      success: false,
+      message: "Please log into your account to submit review!",
+    });
+  }
+
   const review = {
-    user: req.user._id,
+    user,
     name: req.user.name,
     rating: Number(rating),
     comment,
