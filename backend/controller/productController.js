@@ -54,12 +54,14 @@ const shuffleArray = (array) => {
 // Get All Product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
+
   // console.log("Hello: ", req.query.keyword, req.query.category);
   const page = parseInt(req.query.page) || 1;
 
   const pageSize = 48;
 
   const skip = (page - 1) * pageSize;
+
 
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()

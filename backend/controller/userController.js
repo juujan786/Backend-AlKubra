@@ -204,11 +204,20 @@ exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
 // Get all users(admin)
 exports.getAllUser = catchAsyncErrors(async (req, res, next) => {
   const users = await User.find();
+  const { q } = req.query;
 
-  res.status(200).json({
+  const keys = ["name", "email"];
+
+  const search = (data) => {
+    return data.filter((item) =>
+      keys.some((key) => item[key].toLowerCase().includes(q))
+    );
+  };
+
+  q ? res.status(200).json(search(users)) : res.status(200).json({
     success: true,
     users,
-  });
+  })
 });
 
 // Get single user (admin)
