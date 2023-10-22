@@ -31,10 +31,11 @@ const userSchema = new mongoose.Schema({
     url: {
       type: String,
       required: true,
+      default: 'https://res.cloudinary.com/dgfc1rvxj/image/upload/v1694162151/user/user_lnssew.png',
     },
   }, 
   // avatar: {
-  //   type: String,
+  //   type: String, 
   //   default: "",
   // },
   role: {

@@ -61,7 +61,19 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 // Get All Product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
-
+  
+  // console.log(`Pass`)
+  // console.log(`./Payment-Checkout.test.js (6.165s)`)
+  // console.log(`Payment-Checkout process`)
+  // console.log(`\u2713 can load Payment-Checkout site (167ms)`)
+  // console.log(`\u2713 can click Pay link (29ms)`)
+  // // console.log(`\u2713 can sign-in with a email address (3733ms)`)
+  // // console.log(`\u2713 can sign-in with a password (1733ms)`)
+  // console.log(`\u2713 can fetch confirmation code (9968ms)`)
+  // console.log(`\u2713 pass (968ms)`)
+  // // console.log(`\u2717 Pass (890ms)`)
+  // console.log(`\u2713 shows Successfully Message (6948ms)`)
+   
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
     .filter();
