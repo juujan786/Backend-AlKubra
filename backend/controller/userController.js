@@ -5,7 +5,6 @@ const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary");
- 
 
 // Register a User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -28,7 +27,6 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
-
   // checking if user has given password and email both
 
   if (!email || !password) {
@@ -42,7 +40,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   }
 
   req.user = user._id;
-  
+
   const isPasswordMatched = await user.comparePassword(password);
 
   if (!isPasswordMatched) {
@@ -81,9 +79,6 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
   await user.save({ validateBeforeSave: false });
 
-  // const resetPasswordUrl = `${req.protocol}://${req.get(
-  //   "host"
-  // )}/password/reset/${resetToken}`;
   const resetPasswordUrl = `http://localhost:3000/password/reset/${resetToken}`;
 
   const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email then, please ignore it.`;
@@ -91,7 +86,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: `Ecommerce Password Recovery`,
+      subject: `AlKubra || Password Recovery`,
       message,
     });
 
@@ -182,7 +177,6 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
-
   res.status(200).json({
     success: true,
     user,
@@ -256,30 +250,28 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
 
 // update User Profile
 exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
- 
-
-    const { secure_url, public_id } = await cloudinary.v2.uploader.upload(req.body.avatar, {
+  const { secure_url, public_id } = await cloudinary.v2.uploader.upload(
+    req.body.avatar,
+    {
       folder: "user",
       // width: 150,
       // crop: "scale",
-    });
-    
-    
-    // Find the current user
-    const currentUser = await User.findById(req.user.id);
-    
-    // Check if the user has a previous avatar
-    if (currentUser.avatar && currentUser.avatar.public_id) {
-      // Delete the old avatar image from Cloudinary
-      await cloudinary.uploader.destroy(currentUser.avatar.public_id);
     }
- 
- 
- 
+  );
+
+  // Find the current user
+  const currentUser = await User.findById(req.user.id);
+
+  // Check if the user has a previous avatar
+  if (currentUser.avatar && currentUser.avatar.public_id) {
+    // Delete the old avatar image from Cloudinary
+    await cloudinary.uploader.destroy(currentUser.avatar.public_id);
+  }
+
   const newUserData = {
     name: req.body.name,
     email: req.body.email,
-    avatar: {public_id, url: secure_url}
+    avatar: { public_id, url: secure_url },
   };
 
   const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
